@@ -17,7 +17,7 @@ opts_chunk$set(echo = TRUE, results = 'hold')
 ```
 
 2. Load the data
-```{r}
+```{r cache=TRUE}
 unzip("activity.zip")
 activity_data <- read.csv("activity.csv", header=TRUE, sep=",")
 str(activity_data)
@@ -56,9 +56,9 @@ total_steps_per_day <- sapply(steps_per_day, sum, na.rm=TRUE)
 ```
 
 2. Make a histogram of the total number of steps taken each day
-```{r}
+```{r cache=TRUE, fig.width=11, fig.height=6}
 plot(unique_dates, total_steps_per_day, main="Histogram of steps taken each day", 
-     xlab="Date (October to November 2012)", ylab="Frequency", type="h", lwd=4, col="blue")
+     xlab="Date (October to November 2012)", ylab="Frequency", type="h", lwd=4, col="grey")
 ```
 
 3. Calculate and report the mean of the total number of steps taken per day
@@ -84,7 +84,7 @@ steps_per_day[10:12]
 ## What is the average daily activity pattern?
 What we now need to do is split up this data again so that individual data frames represent the steps taken over each time interval. As such, there will be a data frame for interval 5, another data frame for interval 10 and so on. Once we extract out these individual data frames, we thus compute the mean for each time interval. It is imperative to note that we again will ignore NA values. We will thus plot the data as a time-series plot (of type="l"). Once we have done this, we will locate where in the time-series plot the maximum is located and will draw a red vertical line to denote this location:  
   
-```{r}
+```{r cache=TRUE, fig.width=11, fig.height=6}
 # Part 3 - Time-series plot (type="l")
 # x-axis - Time interval (5, 10, 15, ...)
 # y-axis - Average number of steps taken across all days for this time interval
@@ -158,7 +158,7 @@ activity_data_new$steps <- raw_steps
 ```
   
 Plot a histogram of the activity_data_new.
-```{r}
+```{r cache=TRUE, fig.width=11, fig.height=12}
 # Repeat Part 2 now
 # First split up the data frame for steps by day
 steps_split_new <- split(activity_data_new$steps, dates$yday)
@@ -174,10 +174,10 @@ total_steps_per_day_new <- sapply(steps_split_new, sum)
 par(mfcol=c(2,1))
 # Plot the original histogram first
 plot(unique_dates, total_steps_per_day, main="Histogram of steps taken each day before imputing", 
-     xlab="Date (October to November 2012)", ylab="Frequency", type="h", lwd=4, col="blue")
+     xlab="Date (October to November 2012)", ylab="Frequency", type="h", lwd=4, col="grey")
 # Plot the modified histogram after
 plot(unique_dates, total_steps_per_day_new, main="Histogram of steps taken each day after imputing", 
-     xlab="Date (October to November 2012)", ylab="Frequency", type="h", lwd=4, col="blue")
+     xlab="Date (October to November 2012)", ylab="Frequency", type="h", lwd=4, col="grey")
 
 ```
   
@@ -238,7 +238,7 @@ activity_data_weekends <- activity_data_new[activity_data_new$typeOfDay == "Week
 Now that we have accomplished this, let’s split up the data for each data frame so that we will have two sets of individual data frames. One set is for weekdays and within this data frame are individual data frames. Each data frame contains the steps for each interval recorded on a weekday. The other set is for weekends, and within this data frame are individual data frames. Like previously, each data frame here contains the steps for each interval recorded on a weekday. Once we have these two sets of data frames, we will now calculate the mean amount of steps for each interval for the weekdays data frame and weekends data frame. This will result in two vectors - one for the weekdays and the other for weekends. The following R code does this for us:
   
 
-```{r}
+```{r cache=TRUE, fig.width=11, fig.height=12}
 # Further split up the Weekdays and Weekends into their own intervals
 data_split_weekdays <- split(activity_data_weekdays$steps, activity_data_weekdays$interval)
 data_split_weekends <- split(activity_data_weekends$steps, activity_data_weekends$interval)
