@@ -227,7 +227,7 @@ average_steps_per_interval <- sapply(interval_split, mean, na.rm=TRUE)
 # Plot the time-series graph
 time_series_avg_per_interval <- plot(unique_intervals, average_steps_per_interval, type="l",
      main="Average Steps per Interval Across All Days", 
-     xlab="Interval", ylab="Average # Steps Across All Days", 
+     xlab="Interval", ylab="Interval", 
      lwd=2, col="gray")
 print(time_series_avg_per_interval)
 dev.copy(png,'plot2.png')
@@ -452,7 +452,7 @@ mean_steps_per_weekend_interval <- sapply(data_split_weekends, mean)
 par(mfcol=c(2,1))
 steps_per_weekday <- plot(unique_intervals, mean_steps_per_weekday_interval, type="l",
      main="Average Steps per Interval Across All Weekdays", 
-     xlab="Interval", ylab="Average # Steps Across All Weekdays", 
+     xlab="Interval", ylab="Steps", 
      lwd=2, col="grey")
 print(steps_per_weekday)
 dev.copy(png,'plot5.png')
@@ -460,7 +460,7 @@ dev.off()
 
 steps_per_weekend <- plot(unique_intervals, mean_steps_per_weekend_interval, type="l",
      main="Average Steps per Interval Across All Weekends", 
-     xlab="Interval", ylab="Average # Steps Across All Weekends", 
+     xlab="Interval", ylab="Steps", 
      lwd=2, col="grey")
 ```
 
