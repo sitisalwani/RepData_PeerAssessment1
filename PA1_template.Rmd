@@ -46,7 +46,7 @@ head(activity_data)
 ## What is mean total number of steps taken per day?
 
 1. Create a historgram of the total number of steps taken each day
-```{r}
+```{r cache=TRUE}
 # First, split up the data frame for steps by day
 steps_per_day <- split(activity_data$steps, dates$yday)
 
@@ -56,27 +56,30 @@ total_steps_per_day <- sapply(steps_per_day, sum, na.rm=TRUE)
 ```
 
 2. Make a histogram of the total number of steps taken each day
-```{r cache=TRUE, fig.width=11, fig.height=6}
-plot(unique_dates, total_steps_per_day, main="Histogram of steps taken each day", 
+```{r cache=TRUE, fig.width=11, fig.height=5}
+histo_steps_taken_each_day <- plot(unique_dates, total_steps_per_day, main="Steps Taken Each Day", 
      xlab="Date (October to November 2012)", ylab="Frequency", type="h", lwd=4, col="grey")
+print(histo_steps_taken_each_day)
+dev.copy(png,'plot1.png')
+dev.off()
 ```
 
 3. Calculate and report the mean of the total number of steps taken per day
-```{r}
+```{r cache=TRUE}
 mean_steps_per_day <- sapply(steps_per_day, mean, na.rm=TRUE)
 mean_data_frame <- data.frame(date=unique_dates, mean_steps_per_day = mean_steps_per_day, row.names = NULL)
 head(mean_data_frame)
 ```
 
 4. Calculate and report the median of the total number of steps taken per day
-```{r}
+```{r cache=TRUE}
 median_steps_per_day <- sapply(steps_per_day, median, na.rm=TRUE)
 median_data_frame <- data.frame(date=unique_dates, median_steps_per_day=median_steps_per_day, row.names=NULL)
 head(median_data_frame)
 ```
 
 The median measure may look a bit puzzling, but if you observe the data for the amount of steps over some of the days, you will see that a majority of the steps taken are zero and so the mean would logically represent the 50th percentile. Here is a sample between October 10th to October 12th of 2012:
-```{r}
+```{r cache=TRUE}
 steps_per_day[10:12]
 ```
 
@@ -96,10 +99,14 @@ interval_split <- split(activity_data$steps, activity_data$interval)
 average_steps_per_interval <- sapply(interval_split, mean, na.rm=TRUE)
 
 # Plot the time-series graph
-plot(unique_intervals, average_steps_per_interval, type="l",
-     main="Average number of steps per interval across all days", 
-     xlab="Interval", ylab="Average # of steps across all days", 
+time_series_avg_per_interval <- plot(unique_intervals, average_steps_per_interval, type="l",
+     main="Average Steps per Interval Across All Days", 
+     xlab="Interval", ylab="Average # Steps Across All Days", 
      lwd=2, col="gray")
+print(time_series_avg_per_interval)
+dev.copy(png,'plot2.png')
+dev.off()
+
 
 # Find the location of where the maximum is
 maximum_interval_days <- max(average_steps_per_interval, na.rm=TRUE)
@@ -111,7 +118,7 @@ abline(v=maximum_interval, col="red", lwd=3)
 ```
     
 With reference to the above plot, the interval that records the maximum number of steps averaged across all days is:
-```{r}
+```{r cache=TRUE}
 maximum_interval
 ```
 
@@ -120,13 +127,13 @@ maximum_interval
 ## Imputing missing values
 
 Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
-```{r}
+```{r cache=TRUE}
 missing_values <- sum(is.na(activity_data$steps))
 missing_values
 ```
   
 The strategy that we will use to fill in the missing values in the data set is to replace all NA values with the mean of that particular 5-minute interval the observation falls on. Now that we have devised this strategy, let’s replace all of the NA values with the aforementioned strategy.
-```{r}
+```{r cache=TRUE}
 # Modify the meanStepsPerDay vector that contains the mean steps taken
 # for this 5 minute interval
 # Each day consists of 288 intervals and there are 61 days in total
@@ -173,16 +180,22 @@ total_steps_per_day_new <- sapply(steps_split_new, sum)
 # for each day
 par(mfcol=c(2,1))
 # Plot the original histogram first
-plot(unique_dates, total_steps_per_day, main="Histogram of steps taken each day before imputing", 
+histo_before_impute <- plot(unique_dates, total_steps_per_day, main="Steps Taken Each Day Before Impute",
      xlab="Date (October to November 2012)", ylab="Frequency", type="h", lwd=4, col="grey")
+print(histo_before_impute)
+dev.copy(png,'plot3.png')
+dev.off()
+
 # Plot the modified histogram after
-plot(unique_dates, total_steps_per_day_new, main="Histogram of steps taken each day after imputing", 
-     xlab="Date (October to November 2012)", ylab="Frequency", type="h", lwd=4, col="grey")
+histo_after_impute <- plot(unique_dates, total_steps_per_day_new, main="Steps Taken Each Day After Impute", xlab="Date (October to November 2012)", ylab="Frequency", type="h", lwd=4, col="grey")
+print(histo_after_impute)
+dev.copy(png,'plot4.png')
+dev.off()
 
 ```
   
 In order to find the impact of imputing the missing values, let us compute the mean and median of steps taken per day
-```{r}
+```{r cache=TRUE}
 mean_steps_per_day_new <- sapply(steps_split_new, mean)
 mean_data_frame_new <- data.frame(date=unique_dates, mean_steps_per_day=mean_steps_per_day,mean_steps_per_day_new=mean_steps_per_day_new, row.names=NULL)
 
@@ -190,7 +203,7 @@ head(mean_data_frame_new)
 ```
 Median steps per day ;
 
-```{r}
+```{r cache=TRUE}
 median_steps_per_day_new <- sapply(steps_split_new, median)
 median_data_frame_new <- data.frame(date=unique_dates, median_steps_per_day=median_steps_per_day, 
                                  median_steps_per_day_new=median_steps_per_day_new, row.names=NULL)
@@ -204,7 +217,7 @@ As we can see both mean and median of steps taken per day became exactly same wh
 ## Are there differences in activity patterns between weekdays and weekends?
 
 With the new data set we have just created, we are going to split up the data into two data frames - one data frame consists of all steps taken on a weekday, while the other data frame consists of all steps taken on a weekend. The following R code illustrates this for us: 
-```{r}
+```{r cache=TRUE}
 # Part 5 - Now split up the data so that it's sorted by weekday or weekend
 # We have casted the dates to a POSIXlt class so wday is part of this class
 # wday is an integer ranging from 0 to 6 that represents the day of the week
@@ -248,14 +261,21 @@ mean_steps_per_weekday_interval <- sapply(data_split_weekdays, mean)
 mean_steps_per_weekend_interval <- sapply(data_split_weekends, mean)
 
 par(mfcol=c(2,1))
-plot(unique_intervals, mean_steps_per_weekday_interval, type="l",
-     main="Average number of steps per interval across all weekdays", 
-     xlab="Interval", ylab="Average # of steps across all weekdays", 
+steps_per_weekday <- plot(unique_intervals, mean_steps_per_weekday_interval, type="l",
+     main="Average Steps per Interval Across All Weekdays", 
+     xlab="Interval", ylab="Average # Steps Across All Weekdays", 
      lwd=2, col="grey")
-plot(unique_intervals, mean_steps_per_weekend_interval, type="l",
-     main="Average number of steps per interval across all weekends", 
-     xlab="Interval", ylab="Average # of steps across all weekends", 
+print(steps_per_weekday)
+dev.copy(png,'plot5.png')
+dev.off()
+
+steps_per_weekend <- plot(unique_intervals, mean_steps_per_weekend_interval, type="l",
+     main="Average Steps per Interval Across All Weekends", 
+     xlab="Interval", ylab="Average # Steps Across All Weekends", 
      lwd=2, col="grey")
+print(steps_per_weekend)
+dev.copy(png,'plot6.png')
+dev.off()
 ```
   
 What is interesting about this plot is that it very much sums up the activity that any normal person would undergo depending on whether it is a weekday or weekend. For both days, the intervals between 0 and about 525 are uniform. This most likely represents when the subject was sleeping. The differences start at between 525 and roughly 800. On the weekdays, movement is most likely attributed to the subject getting ready to go to work or starting their day. On the weekends, movement is less frequent. This could be attributed to the subject sleeping in and perhaps making breakfast to start their day.
